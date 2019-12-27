@@ -13,10 +13,17 @@ typedef HANDLE RseThread;
 #include <alext.h>
 #include <RSE/RSE.h>
 
-#define OVERSAMPLING    1
-#define BUFFER_SIZE_DST 1024
-#define BUFFER_SIZE_SRC 1024 * OVERSAMPLING
-#define BUFFER_COUNT    4
+#define OVERSAMPLING_STEPS  2
+#define OVERSAMPLING        (1 << OVERSAMPLING_STEPS)
+#define BUFFER_SIZE_DST     1024
+#define BUFFER_SIZE_SRC     (BUFFER_SIZE_DST * OVERSAMPLING)
+#define BUFFER_COUNT        4
+
+typedef struct
+{
+    float xv[5];
+    float yv[5];
+} RseFilter;
 
 typedef struct
 {
@@ -47,6 +54,8 @@ struct RseContext_
     ALCcontext* alContext;
     ALuint      alSource;
     ALuint      alBuffers[BUFFER_COUNT];
+
+    RseFilter filters[OVERSAMPLING_STEPS];
 
     RseChannel* channels;
     RseThread   workerThread;

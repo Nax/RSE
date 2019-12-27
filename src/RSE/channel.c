@@ -32,7 +32,7 @@ RSE_API void rseChannelFrequency(RseContext* ctx, int ch, float freq)
     RseChannel* c;
 
     c = ctx->channels + ch;
-    rseModulableFixed(&c->freq, freq / ctx->outFreq);
+    rseModulableFixed(&c->freq, freq / ctx->genFreq);
 }
 
 RSE_API void rseChannelFrequencyModulation(RseContext* ctx, int ch, float targetFreq, float time, int repeat)
@@ -40,7 +40,7 @@ RSE_API void rseChannelFrequencyModulation(RseContext* ctx, int ch, float target
     RseChannel* c;
 
     c = ctx->channels + ch;
-    rseModulableDynamic(ctx, &c->freq, targetFreq / ctx->outFreq, time, repeat);
+    rseModulableDynamic(ctx, &c->freq, targetFreq / ctx->genFreq, time, repeat);
 }
 
 RSE_API void rseChannelGain(RseContext* ctx, int ch, float gain)

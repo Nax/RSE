@@ -32,6 +32,45 @@ static void rseModulate(RseModulable* m)
     }
 }
 
+static void rseFilter(float* buffer, size_t size, RseFilter* filter)
+{
+    static const float kGain = 1.677001565f;
+
+    for (size_t i = 0; i < size; ++i)
+    {
+        filter->xv[0] = filter->xv[1];
+        filter->xv[1] = filter->xv[2];
+        filter->xv[2] = filter->xv[3];
+        filter->xv[3] = filter->xv[4];
+        filter->xv[4] = buffer[i] / kGain;
+
+        filter->yv[0] = filter->yv[1];
+        filter->yv[1] = filter->yv[2];
+        filter->yv[2] = filter->yv[3];
+        filter->yv[3] = filter->yv[4];
+
+        filter->yv[4] = (
+            filter->xv[0] + filter->xv[4]
+            + 4 * (filter->xv[1] + filter->xv[3])
+            + 6 * filter->xv[2]
+            + (-0.3555773823f * filter->yv[0])
+            + (-1.7861066002f * filter->yv[1])
+            + (-3.4223095294f * filter->yv[2])
+            + (-2.9768443337f * filter->yv[3])
+        );
+
+        buffer[i] = filter->yv[4];
+    }
+}
+
+static void rseDecimate(float* buffer, size_t size)
+{
+    for (size_t i = 0; i < size / 2; ++i)
+    {
+        buffer[i] = buffer[i * 2];
+    }
+}
+
 void rseMix(RseContext* ctx, int16_t* buffer)
 {
     float master[BUFFER_SIZE_SRC];
@@ -74,7 +113,13 @@ void rseMix(RseContext* ctx, int16_t* buffer)
         rseModulate(&ch->duty);
     }
 
-    for (int i = 0; i < BUFFER_SIZE_SRC; ++i)
+    for (int i = 0; i < OVERSAMPLING_STEPS; ++i)
+    {
+        rseFilter(master, BUFFER_SIZE_SRC / (1 << i), ctx->filters + i);
+        rseDecimate(master, BUFFER_SIZE_SRC / (1 << i));
+    }
+
+    for (int i = 0; i < BUFFER_SIZE_DST; ++i)
     {
         buffer[i] = conv16(master[i]);
     }
