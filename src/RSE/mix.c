@@ -32,37 +32,6 @@ static void rseModulate(RseModulable* m)
     }
 }
 
-static void rseFilter(float* buffer, size_t size, RseFilter* filter)
-{
-    static const float kGain = 1.677001565f;
-
-    for (size_t i = 0; i < size; ++i)
-    {
-        filter->xv[0] = filter->xv[1];
-        filter->xv[1] = filter->xv[2];
-        filter->xv[2] = filter->xv[3];
-        filter->xv[3] = filter->xv[4];
-        filter->xv[4] = buffer[i] / kGain;
-
-        filter->yv[0] = filter->yv[1];
-        filter->yv[1] = filter->yv[2];
-        filter->yv[2] = filter->yv[3];
-        filter->yv[3] = filter->yv[4];
-
-        filter->yv[4] = (
-            filter->xv[0] + filter->xv[4]
-            + 4 * (filter->xv[1] + filter->xv[3])
-            + 6 * filter->xv[2]
-            + (-0.3555773823f * filter->yv[0])
-            + (-1.7861066002f * filter->yv[1])
-            + (-3.4223095294f * filter->yv[2])
-            + (-2.9768443337f * filter->yv[3])
-        );
-
-        buffer[i] = filter->yv[4];
-    }
-}
-
 static void rseDecimate(float* buffer, size_t size)
 {
     for (size_t i = 0; i < size / 2; ++i)

@@ -9,7 +9,7 @@ void rseGenWaveSawtooth(RseContext* ctx, RseChannel* ch, float* buffer)
 
     for (int i = 0; i < BUFFER_SIZE_SRC; ++i)
     {
-        v = ch->clock;
+        v = (ch->clock - 0.5f) * 2;
         ch->clock += ch->freq.value;
         if (ch->clock >= 1.f)
             ch->clock -= 1.f;

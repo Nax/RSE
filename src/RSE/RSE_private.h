@@ -15,14 +15,14 @@ typedef HANDLE RseThread;
 
 #define OVERSAMPLING_STEPS  2
 #define OVERSAMPLING        (1 << OVERSAMPLING_STEPS)
-#define BUFFER_SIZE_DST     1024
+#define BUFFER_SIZE_DST     512
 #define BUFFER_SIZE_SRC     (BUFFER_SIZE_DST * OVERSAMPLING)
 #define BUFFER_COUNT        4
+#define BUFFER_EXTRA        32
 
 typedef struct
 {
-    float xv[5];
-    float yv[5];
+    float values[32];
 } RseFilter;
 
 typedef struct
@@ -66,6 +66,7 @@ DWORD WINAPI rseWorkerMain(LPVOID arg);
 #endif
 
 void rseMix(RseContext* ctx, int16_t* buffer);
+void rseFilter(float* buffer, size_t size, RseFilter* filter);
 void rseGenWaveSquare(RseContext* ctx, RseChannel* ch, float* buffer);
 void rseGenWaveTriangle(RseContext* ctx, RseChannel* ch, float* buffer);
 void rseGenWaveSine(RseContext* ctx, RseChannel* ch, float* buffer);
