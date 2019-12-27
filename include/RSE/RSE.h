@@ -3,12 +3,24 @@
 
 #include <RSE/abi.h>
 
+#define RSE_WAVE_NULL       0
+#define RSE_WAVE_SINE       1
+#define RSE_WAVE_SQUARE     2
+#define RSE_WAVE_TRIANGLE   3
+
 typedef struct RseContext_ RseContext;
 
 /*
- * init.c
+ * init
  */
 RSE_API RseContext* rseCreateContext(int frequency, int channels);
 RSE_API void        rseDestroyContext(RseContext* ctx);
+
+/*
+ * channel
+ */
+RSE_API void rseChannelType(RseContext* ctx, int ch, int type);
+RSE_API void rseChannelFrequency(RseContext* ctx, int ch, float freq);
+RSE_API void rseChannelGain(RseContext* ctx, int ch, float gain);
 
 #endif
