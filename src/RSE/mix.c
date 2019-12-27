@@ -1,5 +1,10 @@
 #include <RSE/RSE_private.h>
 
+static float lerp(float a, float b, float x)
+{
+    return (1.f - x) * a + x * b;
+}
+
 static int16_t conv16(float sample)
 {
     if (sample > 1.f)
@@ -9,10 +14,28 @@ static int16_t conv16(float sample)
     return (int16_t)(sample * 32767);
 }
 
+static void rseModulate(RseModulable* m)
+{
+    m->value = lerp(m->source, m->target, m->acc);
+    m->acc += m->mod;
+    if (m->acc >= 1.f)
+    {
+        if (m->repeat)
+            m->acc -= 1.f;
+        else
+        {
+            m->mod = 0.f;
+            m->acc = 0.f;
+            m->source = m->target;
+            m->value = m->target;
+        }
+    }
+}
+
 void rseMix(RseContext* ctx, int16_t* buffer)
 {
-    float master[BUFFER_SIZE];
-    float tmp[BUFFER_SIZE];
+    float master[BUFFER_SIZE_SRC];
+    float tmp[BUFFER_SIZE_SRC];
 
     memset(master, 0, sizeof(master));
 
@@ -41,13 +64,17 @@ void rseMix(RseContext* ctx, int16_t* buffer)
             break;
         }
 
-        for (int i = 0; i < BUFFER_SIZE; ++i)
+        for (int i = 0; i < BUFFER_SIZE_SRC; ++i)
         {
             master[i] += tmp[i];
         }
+
+        rseModulate(&ch->freq);
+        rseModulate(&ch->gain);
+        rseModulate(&ch->duty);
     }
 
-    for (int i = 0; i < BUFFER_SIZE; ++i)
+    for (int i = 0; i < BUFFER_SIZE_SRC; ++i)
     {
         buffer[i] = conv16(master[i]);
     }

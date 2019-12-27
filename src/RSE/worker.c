@@ -3,7 +3,7 @@
 
 static void workerManageBuffers(RseContext* ctx)
 {
-    int16_t tmp[BUFFER_SIZE];
+    int16_t tmp[BUFFER_SIZE_DST];
     ALuint processed;
     ALuint playing;
     ALuint buf;
@@ -15,7 +15,7 @@ static void workerManageBuffers(RseContext* ctx)
             break;
         alSourceUnqueueBuffers(ctx->alSource, 1, &buf);
         rseMix(ctx, tmp);
-        alBufferData(buf, AL_FORMAT_MONO16, tmp, BUFFER_SIZE * 2, ctx->outFreq);
+        alBufferData(buf, AL_FORMAT_MONO16, tmp, BUFFER_SIZE_DST * 2, ctx->outFreq);
         alSourceQueueBuffers(ctx->alSource, 1, &buf);
         alGetSourcei(ctx->alSource, AL_SOURCE_STATE, &playing);
         if (playing != AL_PLAYING)

@@ -13,15 +13,28 @@ typedef HANDLE RseThread;
 #include <alext.h>
 #include <RSE/RSE.h>
 
-#define BUFFER_SIZE     1024
+#define OVERSAMPLING    1
+#define BUFFER_SIZE_DST 1024
+#define BUFFER_SIZE_SRC 1024 * OVERSAMPLING
 #define BUFFER_COUNT    4
 
 typedef struct
 {
-    int     type;
-    float   gain;
-    float   clock;
-    float   clockInc;
+    float       value;
+    float       source;
+    float       target;
+    float       mod;
+    float       acc;
+    unsigned    repeat:1;
+} RseModulable;
+
+typedef struct
+{
+    int             type;
+    float           clock;
+    RseModulable    gain;
+    RseModulable    freq;
+    RseModulable    duty;
 } RseChannel;
 
 struct RseContext_

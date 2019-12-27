@@ -5,7 +5,7 @@
 
 RSE_API RseContext* rseCreateContext(int frequency, int channels)
 {
-    int16_t tmp[BUFFER_SIZE];
+    int16_t tmp[BUFFER_SIZE_DST];
     RseContext* ctx;
 
     ctx = zalloc(sizeof(*ctx));
@@ -13,7 +13,7 @@ RSE_API RseContext* rseCreateContext(int frequency, int channels)
         return NULL;
 
     ctx->outFreq = frequency;
-    ctx->genFreq = frequency * 4;
+    ctx->genFreq = frequency * OVERSAMPLING;
     ctx->channelCount = channels;
     ctx->channels = zalloc(sizeof(RseChannel) * channels);
     if (!ctx->channels)
@@ -30,7 +30,7 @@ RSE_API RseContext* rseCreateContext(int frequency, int channels)
     memset(tmp, 0, sizeof(tmp));
     for (int i = 0; i < BUFFER_COUNT; ++i)
     {
-        alBufferData(ctx->alBuffers[i], AL_FORMAT_MONO16, tmp, BUFFER_SIZE * sizeof(int16_t), ctx->outFreq);
+        alBufferData(ctx->alBuffers[i], AL_FORMAT_MONO16, tmp, BUFFER_SIZE_DST * sizeof(int16_t), ctx->outFreq);
     }
     alSourceQueueBuffers(ctx->alSource, BUFFER_COUNT, ctx->alBuffers);
     alSourcePlay(ctx->alSource);

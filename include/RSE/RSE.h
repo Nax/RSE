@@ -23,6 +23,10 @@ RSE_API void        rseDestroyContext(RseContext* ctx);
  */
 RSE_API void rseChannelType(RseContext* ctx, int ch, int type);
 RSE_API void rseChannelFrequency(RseContext* ctx, int ch, float freq);
+RSE_API void rseChannelFrequencyModulation(RseContext* ctx, int ch, float targetFreq, float time, int repeat);
 RSE_API void rseChannelGain(RseContext* ctx, int ch, float gain);
+RSE_API void rseChannelGainModulation(RseContext* ctx, int ch, float target, float time, int repeat);
+RSE_API void rseChannelDuty(RseContext* ctx, int ch, float duty);
+RSE_API void rseChannelDutyModulation(RseContext* ctx, int ch, float target, float time, int repeat);
 
 #endif
