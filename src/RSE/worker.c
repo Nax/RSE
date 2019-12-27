@@ -35,7 +35,7 @@ DWORD WINAPI rseWorkerMain(LPVOID arg)
     alcMakeContextCurrent(ctx->alContext);
     for (;;)
     {
-        Sleep(50);
+        Sleep(0);
         workerManageBuffers(ctx);
     }
     return 0;
