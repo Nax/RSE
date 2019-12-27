@@ -7,6 +7,8 @@
 #define RSE_WAVE_SINE       1
 #define RSE_WAVE_SQUARE     2
 #define RSE_WAVE_TRIANGLE   3
+#define RSE_WAVE_SAWTOOTH   4
+#define RSE_WAVE_NOISE      5
 
 typedef struct RseContext_ RseContext;
 

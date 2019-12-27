@@ -27,6 +27,18 @@ void rseMix(RseContext* ctx, int16_t* buffer)
         case RSE_WAVE_SQUARE:
             rseGenWaveSquare(ctx, ch, tmp);
             break;
+        case RSE_WAVE_TRIANGLE:
+            rseGenWaveTriangle(ctx, ch, tmp);
+            break;
+        case RSE_WAVE_SINE:
+            rseGenWaveSine(ctx, ch, tmp);
+            break;
+        case RSE_WAVE_SAWTOOTH:
+            rseGenWaveSawtooth(ctx, ch, tmp);
+            break;
+        case RSE_WAVE_NOISE:
+            rseGenWaveNoise(ctx, ch, tmp);
+            break;
         }
 
         for (int i = 0; i < BUFFER_SIZE; ++i)

@@ -45,5 +45,9 @@ DWORD WINAPI rseWorkerMain(LPVOID arg);
 
 void rseMix(RseContext* ctx, int16_t* buffer);
 void rseGenWaveSquare(RseContext* ctx, RseChannel* ch, float* buffer);
+void rseGenWaveTriangle(RseContext* ctx, RseChannel* ch, float* buffer);
+void rseGenWaveSine(RseContext* ctx, RseChannel* ch, float* buffer);
+void rseGenWaveSawtooth(RseContext* ctx, RseChannel* ch, float* buffer);
+void rseGenWaveNoise(RseContext* ctx, RseChannel* ch, float* buffer);
 
 #endif
